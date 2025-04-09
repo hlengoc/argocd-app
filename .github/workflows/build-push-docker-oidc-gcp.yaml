@@ -1,0 +1,108 @@
+# name: Check Permission
+
+# permissions:
+#   id-token: write # This is required for requesting the JWT
+#   contents: read  # This is required for actions/checkout
+
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   Get_OIDC_ID_token:
+#     runs-on: ubuntu-latest
+#     steps:
+#      - uses: actions/checkout@v4
+     
+#      - id: "auth"
+#        name: "Authenticate to GCP"
+#        uses: "google-github-actions/auth@v2"
+#        with:
+#           project_id: "fpt-dev"
+#           workload_identity_provider: "projects/871426567684/locations/global/workloadIdentityPools/github/providers/my-repo"
+
+#      - id: "gcloud"
+#        name: "gcloud"
+#        run: gcloud secrets versions access 1 --secret="k8s-secret"
+        
+name: Build push Docker images to Google Artifact Registry
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: "fpt-dev" # TODO: update to your Google Cloud project ID
+  VERSION: ga-0.0.1
+
+permissions:
+  id-token: write
+  contents: "read"
+
+jobs:
+  Build_and_Push:
+    defaults:
+      run:
+        working-directory: ./src
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Set up Node.js"
+        uses: actions/setup-node@v4
+
+      - id: "auth"
+        name: "Authenticate to GCP"
+        uses: "google-github-actions/auth@v2"
+        with:
+          project_id: "fpt-dev"
+          workload_identity_provider: "projects/871426567684/locations/global/workloadIdentityPools/github/providers/my-repo"
+
+      - id: "gcloud"
+        name: "gcloud"
+        run: gcloud secrets versions access 1 --secret="github-action-secrets"
+
+      # - run: cat package.json
+
+      - name: "Docker Auth"
+        uses: "docker/login-action@v3"
+        with:
+          username: "oauth2accesstoken"
+          password: "${{ steps.auth.outputs.auth_token }}"
+          registry: "asia-southeast1-docker.pkg.dev"
+
+      - name: "Build and push Docker container"
+        run: |-
+          DOCKER_TAG="asia-southeast1-docker.pkg.dev/fpt-dev/web-frontend-repo/frontend-react-app:${VERSION}"
+
+          docker build \
+            --tag "${DOCKER_TAG}" \
+            .
+            
+          docker push "${DOCKER_TAG}"
+
+  Update_infra_repo:
+    runs-on: ubuntu-latest
+    needs: Build_and_Push
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          repository: hlengoc/argocd-infra
+          token: ${{ secrets.GIT_TOKEN }}
+          ref: "main"
+
+      - name: Verify
+        run: |
+          sed -i "s/^ *image:.*/        image: asia-southeast1-docker.pkg.dev\/fpt-dev\/web-frontend-repo\/frontend-react-app:${VERSION}/" manifests/deployment.yaml
+          cat manifests/deployment.yaml
+
+      - name: Commit and Push
+        run: |
+          git config --global user.email "hlengoc@hillspire.com"
+          git config --global user.name "hlengoc"
+          git add .
+          git commit -m "Update image to ${VERSION}"
+          git push origin main
