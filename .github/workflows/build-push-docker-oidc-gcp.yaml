@@ -35,7 +35,7 @@ on:
 
 env:
   PROJECT_ID: "fpt-dev" # TODO: update to your Google Cloud project ID
-  VERSION: ga-0.0.1
+  VERSION: ga-0.0.2
 
 permissions:
   id-token: write
