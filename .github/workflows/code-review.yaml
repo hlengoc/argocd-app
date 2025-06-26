@@ -1,0 +1,40 @@
+name: Daily PR Summary Email
+
+# on:
+#   schedule:
+#     - cron: '0 9 * * *'  # every day at 9:00 UTC
+#   workflow_dispatch:      # allows manual run
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:      
+
+jobs:
+  email_prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch open PRs
+        id: fetch_prs
+        run: |
+          curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+            https://api.github.com/repos/${{ github.repository }}/pulls \
+            | jq -r '.[] | "* [\(.title)](\(.html_url)) by \(.user.login)"' > pr_list.txt
+
+          echo "PR_BODY<<EOF" >> $GITHUB_ENV
+          echo "📬 *Open PRs in ${{ github.repository }}*:" >> $GITHUB_ENV
+          cat pr_list.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Send email via SMTP
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: hlengoc.fpt@hillspire.com
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "PRs Summary for ${{ github.repository }}"
+          body: ${{ env.PR_BODY }}
+          to: gle.fpt@hillspire.com
+          from: GitHub Actions <hlengoc.fpt@hillspire.com>
+          secure: true
