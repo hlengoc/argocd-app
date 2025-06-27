@@ -65,7 +65,7 @@ jobs:
 
       - name: Fetch PRs and send email
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ORG }}
+          GH_TOKEN_ORG: ${{ secrets.GH_TOKEN_ORG }}
           ORG_NAME: Hillspire
           GMAIL_USER: hlengoc.fpt@hillspire.com
           GMAIL_PASS: ${{ secrets.GMAIL_APP_PASSWORD }}
