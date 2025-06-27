@@ -77,7 +77,7 @@ jobs:
           from email.mime.text import MIMEText
 
           headers = {
-              'Authorization': f'token {os.environ[\"GH_TOKEN\"]}',
+              'Authorization': f'token {os.environ[\"GH_TOKEN_ORG\"]}',
               'Accept': 'application/vnd.github+json'
           }
 
