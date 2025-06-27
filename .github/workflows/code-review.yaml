@@ -94,6 +94,7 @@ jobs:
 
           def get_pull_requests(org, repo):
               r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls?state=open', headers=headers)
+              print(r)
               return r.json() if r.status_code == 200 else []
 
           def has_copilot_comments(org, repo, pr_number):
