@@ -1,40 +1,141 @@
-name: Daily PR Summary Email
+# name: Daily PR Summary Email
 
+# # on:
+# #   schedule:
+# #     - cron: '0 9 * * *'  # every day at 9:00 UTC
+# #   workflow_dispatch:      # allows manual run
 # on:
-#   schedule:
-#     - cron: '0 9 * * *'  # every day at 9:00 UTC
-#   workflow_dispatch:      # allows manual run
+#   # push:
+#   #   branches:
+#   #     - main
+#   workflow_dispatch:      
+
+# jobs:
+#   email_prs:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Fetch open PRs
+#         id: fetch_prs
+#         run: |
+#           curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
+#             https://api.github.com/repos/${{ github.repository }}/pulls \
+#             | jq -r '.[] | "* [\(.title)](\(.html_url)) by \(.user.login)"' > pr_list.txt
+
+#           echo "PR_BODY<<EOF" >> $GITHUB_ENV
+#           echo "📬 *Open PRs in ${{ github.repository }}*:" >> $GITHUB_ENV
+#           cat pr_list.txt >> $GITHUB_ENV
+#           echo "EOF" >> $GITHUB_ENV
+
+#       - name: Send email via SMTP
+#         uses: dawidd6/action-send-mail@v3
+#         with:
+#           server_address: smtp.gmail.com
+#           server_port: 465
+#           username: hlengoc.fpt@hillspire.com
+#           password: ${{ secrets.GMAIL_APP_PASSWORD }}
+#           subject: "PRs Summary for ${{ github.repository }}"
+#           body: ${{ env.PR_BODY }}
+#           to: gle.fpt@hillspire.com
+#           from: GitHub Actions <hlengoc.fpt@hillspire.com>
+#           secure: true
+
+#------------------------------------------ For org scan -----------------------------------------
+
+name: Fetch PRs from all repo in org and Send Email
+
 on:
-  # push:
-  #   branches:
-  #     - main
-  workflow_dispatch:      
+  # schedule:
+  #   - cron: "0 8 * * *" # every day at 8 AM UTC
+  workflow_dispatch:
 
 jobs:
-  email_prs:
+  fetch-prs:
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch open PRs
-        id: fetch_prs
-        run: |
-          curl -s -H "Authorization: token ${{ secrets.GH_PAT }}" \
-            https://api.github.com/repos/${{ github.repository }}/pulls \
-            | jq -r '.[] | "* [\(.title)](\(.html_url)) by \(.user.login)"' > pr_list.txt
+      - name: Checkout (not needed, but often standard)
+        uses: actions/checkout@v4
 
-          echo "PR_BODY<<EOF" >> $GITHUB_ENV
-          echo "📬 *Open PRs in ${{ github.repository }}*:" >> $GITHUB_ENV
-          cat pr_list.txt >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-      - name: Send email via SMTP
-        uses: dawidd6/action-send-mail@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: hlengoc.fpt@hillspire.com
-          password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: "PRs Summary for ${{ github.repository }}"
-          body: ${{ env.PR_BODY }}
-          to: gle.fpt@hillspire.com
-          from: GitHub Actions <hlengoc.fpt@hillspire.com>
-          secure: true
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch PRs and send email
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ORG }}
+          ORG_NAME: Hillspire
+          GMAIL_USER: hlengoc.fpt@hillspire.com
+          GMAIL_PASS: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python -c "
+          import os
+          import requests
+          import smtplib
+          from email.mime.text import MIMEText
+
+          headers = {
+              'Authorization': f'token {os.environ[\"GH_TOKEN\"]}',
+              'Accept': 'application/vnd.github+json'
+          }
+
+          def get_repos(org):
+              repos = []
+              page = 1
+              while True:
+                  r = requests.get(f'https://api.github.com/orgs/{org}/repos?per_page=100&page={page}', headers=headers)
+                  if r.status_code != 200 or not r.json():
+                      break
+                  repos.extend(r.json())
+                  page += 1
+              return [repo['name'] for repo in repos]
+
+          def get_pull_requests(org, repo):
+              r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls?state=open', headers=headers)
+              return r.json() if r.status_code == 200 else []
+
+          def has_copilot_comments(org, repo, pr_number):
+              comments_url = f'https://api.github.com/repos/{org}/{repo}/issues/{pr_number}/comments'
+              r = requests.get(comments_url, headers=headers)
+              if r.status_code != 200:
+                  return False
+              return any('lgtm' in comment['body'].lower() for comment in r.json())
+
+          def list_comments(org, repo, pr_number):
+              comments_url = f'https://api.github.com/repos/{org}/{repo}/issues/{pr_number}/comments'
+              r = requests.get(comments_url, headers=headers)
+              print(r.json())
+
+          org = os.environ['ORG_NAME']
+          # repos = get_repos(org)
+          repos = ['app.accountingdashboard'] 
+          print(repos)
+          matching_prs = []
+
+          for repo in repos:
+              print('----------------------------')
+              print(f'Checking repo: {repo}')
+              prs = get_pull_requests(org, repo)
+              for pr in prs:
+                  print(f'Checking PR #{pr['number']} in {repo}')
+                  list_comments(org, repo, pr['number'])
+                  # if has_copilot_comments(org, repo, pr['number']):
+                  #     matching_prs.append(f'- [{repo}] PR #{pr['number']}: {pr['title']} ({pr['html_url']})')
+
+          # if not matching_prs:
+          #     body = 'No PRs with Copilot comments found.'
+          # else:
+          #     body = 'Pull Requests with Copilot Comments:\n\n' + '\n'.join(matching_prs)
+          # print(body)
+
+          # msg = MIMEText(body)
+          # msg['Subject'] = f'GitHub Copilot PRs Report ({org})'
+          # msg['From'] = os.environ['GMAIL_USER']
+          # msg['To'] = 'leensea96@gmail.com'  # or use dynamic address
+
+          # with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+          #     server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+          #     server.sendmail(msg['From'], [msg['To']], msg.as_string())
+          "
