@@ -216,12 +216,14 @@ jobs:
 
           org = os.environ['ORG_NAME']
           repos = get_repos(org)
-          body = 'Report for Copilot reviews in Hillspire:\n\n'
+          body = 'Report for Copilot reviews in Hillspire organization:\n\n\n'
+          body += '-------------------------------------------------\n'
+          body += '--------------------------------------------------\n\n\n'
           for repo in repos:
               prs = get_pull_requests(org, repo)
               if not len(prs):
                   continue
-              body += f'Repository: {repo}\n\n'
+              body += f'Repository: {repo}\n'
               for pr in prs:
                   num_copilot_comments = 0
                   # print(pr['number'])
@@ -233,7 +235,7 @@ jobs:
                   body += f'--- PR #{pr['number']}: {pr['title']} ({pr['html_url']})\n\n'
                   body += list_comments_by_copilot(org, repo, pr['number'])
               if num_copilot_comments == 0:
-                 body += 'No Copilot review found:\n\n'    
+                 body += 'No Copilot review found\n'    
               body += '-------------------------------------------------\n'
               body += '--------------------------------------------------\n\n\n'
   
