@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 env:
   PROJECT_ID: fpt-dev # TODO: update to your Google Cloud project ID
-  VERSION: ga-0.0.5
+  VERSION: ga-0.0.6
 
 permissions:
   id-token: write
