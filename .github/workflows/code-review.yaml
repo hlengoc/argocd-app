@@ -151,7 +151,7 @@ name: Fetch PRs from all repo in org and Send Email
 
 on:
   schedule:
-    - cron: "30 10 * * *" # every day at 10:30 AM UTC
+    - cron: "30 09 * * *" # every day at 09:30 AM UTC
   workflow_dispatch:
 
 jobs:
@@ -210,7 +210,7 @@ jobs:
               # print(r.json())
               for comment in r.json():
                 if comment['user']['login'] == 'copilot-pull-request-reviewer[bot]':
-                  list_comments = list_comments + '------- Comment by copilot:'  + '\n' + comment['body'] + '\n\n'
+                  list_comments = list_comments + '------- Review by copilot:'  + '\n' + comment['body'] + '\n\n'
               return list_comments 
               
           
@@ -222,14 +222,13 @@ jobs:
               if not len(prs):
                   continue
               body += f'Repository: {repo}\n'
+              num_copilot_comments = 0
               for pr in prs:
-                  num_copilot_comments = 0
                   # print(pr['number'])
                   # list_comments_by_copilot(org, repo, pr['number'])
                   if not list_comments_by_copilot(org, repo, pr['number']):
                       continue
                   num_copilot_comments += 1    
-                  body += '### List of Pull Requests with Copilot reviews:\n\n'
                   body += f'--- PR #{pr['number']}: {pr['title']} ({pr['html_url']})\n\n'
                   body += list_comments_by_copilot(org, repo, pr['number'])
               if num_copilot_comments == 0:
@@ -241,7 +240,7 @@ jobs:
           print(body)
 
           msg = MIMEText(body)
-          msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire organization'
+          msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire repositories'
           msg['From'] = os.environ['GMAIL_USER']
           msg['To'] = 'hlengoc.fpt@hillspire.com'  # or use dynamic address
 
