@@ -202,22 +202,15 @@ jobs:
               r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls?state=closed', headers=headers)
               return r.json() if r.status_code == 200 else []
 
-          def has_copilot_comments(org, repo, pr_number):
-              comments_url = f'https://api.github.com/repos/{org}/{repo}/issues/{pr_number}/comments'
-              r = requests.get(comments_url, headers=headers)
-              if r.status_code != 200:
-                  return False
-              return any('lgtm' in comment['body'].lower() for comment in r.json())
 
           def list_comments_by_copilot(org, repo, pr_number):
               list_comments = ''
-              comments_url = f'https://api.github.com/repos/{org}/{repo}/pulls/{pr_number}/comments'
+              comments_url = f'https://api.github.com/repos/{org}/{repo}/pulls/{pr_number}/reviews'
               r = requests.get(comments_url, headers=headers)
-              print(r.json())
-              # for comment in r.json():
-              #   if comment['user']['login'] == 'Copilot':
-              #     list_comments = list_comments + '-- Comment by ' + comment['user']['login'] + ': ' + comment['body'] + '\n\n'
-              # return list_comments 
+              for comment in r.json():
+                if comment['user']['login'] == 'Copilot':
+                  list_comments = list_comments + '-- Comment by ' + comment['user']['login'] + ': ' + comment['body'] + '\n\n'
+              return list_comments 
               
 
           org = os.environ['ORG_NAME']
@@ -241,7 +234,7 @@ jobs:
               body += '------------------------------------------\n\n'
 
           print('Email body:')          
-          #print(body)
+          print(body)
 
           # msg = MIMEText(body)
           # msg['Subject'] = f'GitHub Copilot PRs Report ({org})'
