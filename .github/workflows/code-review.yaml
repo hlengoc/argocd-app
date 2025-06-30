@@ -216,9 +216,7 @@ jobs:
 
           org = os.environ['ORG_NAME']
           repos = get_repos(org)
-          body = 'Report for Copilot reviews in Hillspire organization:\n\n\n'
-          body += '-------------------------------------------------\n'
-          body += '--------------------------------------------------\n\n\n'
+          body = ''
           for repo in repos:
               prs = get_pull_requests(org, repo)
               if not len(prs):
@@ -239,15 +237,15 @@ jobs:
               body += '-------------------------------------------------\n'
               body += '--------------------------------------------------\n\n\n'
   
-          print('Email body:')          
+          # print('Email body:')          
           print(body)
 
-          # msg = MIMEText(body)
-          # msg['Subject'] = f'GitHub Copilot PRs Report ({org})'
-          # msg['From'] = os.environ['GMAIL_USER']
-          # msg['To'] = 'aws2lehai@gmail.com'  # or use dynamic address
+          msg = MIMEText(body)
+          msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire organization'
+          msg['From'] = os.environ['GMAIL_USER']
+          msg['To'] = 'hlengoc.fpt@hillspire.com'  # or use dynamic address
 
-          # with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-          #     server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
-          #     server.sendmail(msg['From'], [msg['To']], msg.as_string())
+          with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+              server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+              server.sendmail(msg['From'], [msg['To']], msg.as_string())
           "
