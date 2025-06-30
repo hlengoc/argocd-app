@@ -226,13 +226,16 @@ jobs:
                   # body += '------------------------------------------\n\n'
                   continue
               body += f'Repository: {repo}\n\n'
+              body += '### List of Pull Requests with Copilot reviews:\n\n'
               for pr in prs:
                   # print(pr['number'])
                   # list_comments_by_copilot(org, repo, pr['number'])
-                  body += '### List of Pull Requests with Copilot reviews:\n\n'
+                  if not list_comments_by_copilot(org, repo, pr['number']):
+                      continue
                   body += f'--- PR #{pr['number']}: {pr['title']} ({pr['html_url']})\n\n'
-                  body += list_comments_by_copilot(org, repo, pr['number']) if list_comments_by_copilot(org, repo, pr['number']) else 'No reviews of copilot found.\n\n'
-              body += '------------------------------------------\n\n'
+                  body += list_comments_by_copilot(org, repo, pr['number'])
+              body += '-------------------------------------------------\n'
+              body += '--------------------------------------------------\n\n\n'
 
           print('Email body:')          
           print(body)
