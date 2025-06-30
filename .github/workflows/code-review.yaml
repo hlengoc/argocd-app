@@ -207,11 +207,11 @@ jobs:
               list_comments = ''
               comments_url = f'https://api.github.com/repos/{org}/{repo}/pulls/{pr_number}/reviews'
               r = requests.get(comments_url, headers=headers)
-              print(r.json())
-              # for comment in r.json():
-              #   if comment['user']['login'] == 'Copilot':
-              #     list_comments = list_comments + '-- Comment by ' + comment['user']['login'] + ': ' + comment['body'] + '\n\n'
-              # return list_comments 
+              # print(r.json())
+              for comment in r.json():
+                if comment['user']['login'] == 'copilot-pull-request-reviewer[bot]':
+                  list_comments = list_comments + '-- Comment by ' + comment['user']['login'] + ': ' + comment['body'] + '\n\n'
+              return list_comments 
               
 
           org = os.environ['ORG_NAME']
@@ -227,15 +227,15 @@ jobs:
                   continue
               body += f'Repository: {repo}\n\n'
               for pr in prs:
-                  print(pr['number'])
-                  list_comments_by_copilot(org, repo, pr['number'])
-          #         body += '### List of Pull Requests with Copilot Comments:\n\n'
-          #         body += f'- PR #{pr['number']}: {pr['title']} ({pr['html_url']})\n\n'
-          #         body += list_comments_by_copilot(org, repo, pr['number']) if list_comments_by_copilot(org, repo, pr['number']) else 'No comments of copilot found.\n\n'
-          #     body += '------------------------------------------\n\n'
+                  # print(pr['number'])
+                  # list_comments_by_copilot(org, repo, pr['number'])
+                  body += '### List of Pull Requests with Copilot reviews:\n\n'
+                  body += f'- PR #{pr['number']}: {pr['title']} ({pr['html_url']})\n\n'
+                  body += list_comments_by_copilot(org, repo, pr['number']) if list_comments_by_copilot(org, repo, pr['number']) else 'No comments of copilot found.\n\n'
+              body += '------------------------------------------\n\n'
 
-          # print('Email body:')          
-          # print(body)
+          print('Email body:')          
+          print(body)
 
           # msg = MIMEText(body)
           # msg['Subject'] = f'GitHub Copilot PRs Report ({org})'
