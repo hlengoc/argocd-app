@@ -247,4 +247,25 @@ jobs:
           with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
               server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
               server.sendmail(msg['From'], [msg['To']], msg.as_string())
+
+          
+          ###############################################
+
+          html_content = '''
+          <html>
+            <body>
+              <p>This is an <b>HTML</b> email with <i>formatted</i> text.</p>
+            </body>
+          </html>
+          '''
+          msg = MIMEText(html_content, 'html')
+
+          msg['Subject'] = f'Html email for daily report'
+          msg['From'] = os.environ['GMAIL_USER']
+          msg['To'] = 'hlengoc.fpt@hillspire.com'  # or use dynamic address
+
+          with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+              server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+              server.sendmail(msg['From'], [msg['To']], msg.as_string())
+
           "
