@@ -213,15 +213,17 @@ jobs:
                   list_comments = list_comments + '------- Comment by copilot:'  + '\n' + comment['body'] + '\n\n'
               return list_comments 
               
-
+          
           org = os.environ['ORG_NAME']
           repos = get_repos(org)
           body = ''
+          BOLD = "\033[1m"
+          RESET = "\033[0m"
           for repo in repos:
               prs = get_pull_requests(org, repo)
               if not len(prs):
                   continue
-              body += f'Repository: {repo}\n'
+              body += f'Repository: {BOLD} {repo} {RESET}\n'
               for pr in prs:
                   num_copilot_comments = 0
                   # print(pr['number'])
