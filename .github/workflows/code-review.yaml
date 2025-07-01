@@ -100,7 +100,8 @@ jobs:
           msg = MIMEText(body)
           msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire repositories'
           msg['From'] = os.environ['GMAIL_USER']
-          msg['To'] = 'enterprise-app-dev@hillspire.com'  
+          # msg['To'] = 'enterprise-app-dev@hillspire.com'  
+          msg['To'] = 'hlengoc.fpt@hillspire.com,gle.fpt@hillspire.com'  
 
           with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
               server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
