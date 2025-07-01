@@ -256,7 +256,7 @@ jobs:
           
           #####################################################
 
-          html_content = '''
+          html_content = f'''
           <html>
             <body>
               <p>{body}</p>
