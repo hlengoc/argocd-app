@@ -259,9 +259,7 @@ jobs:
           html_content = '''
           <html>
             <body>
-              <p>This is an <b>Daily Report</b> 
-              email with <i>copilot</i> 
-              text.</p>
+              <p>{body}</p>
             </body>
           </html>
           '''
