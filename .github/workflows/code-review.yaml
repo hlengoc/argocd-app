@@ -216,7 +216,7 @@ jobs:
           
           org = os.environ['ORG_NAME']
           repos = get_repos(org)
-          body = ''
+          body = '************* Daily report for Copilot reviews in Hillspire repositories *************\n\n\n'
           for repo in repos:
               prs = get_pull_requests(org, repo)
               if not len(prs):
