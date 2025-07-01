@@ -4,7 +4,7 @@ name: Daily report for Copilot reviews
 
 on:
   schedule:
-    - cron: "00 00 * * *" # every day at 00:00 AM UTC - 07:00 AM Vietnam time
+    - cron: "10 00 * * *" # every day at 10:00 AM UTC - 17:00 AM Vietnam time
   workflow_dispatch:
 
 jobs:
@@ -101,7 +101,7 @@ jobs:
           msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire repositories'
           msg['From'] = os.environ['GMAIL_USER']
           # msg['To'] = 'enterprise-app-dev@hillspire.com'
-          recipients = ['hlengoc.fpt@hillspire.com', 'gle.fpt@hillspire.com']
+          recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
           msg['To'] = ', '.join(recipients)
 
           with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
