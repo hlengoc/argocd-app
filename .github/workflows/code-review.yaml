@@ -221,20 +221,25 @@ jobs:
               prs = get_pull_requests(org, repo)
               if not len(prs):
                   continue
-              body += f'Repository: {repo}\n'
+              # body += f'Repository: {repo}\n'
               num_copilot_comments = 0
+              pr_body = ''
               for pr in prs:
                   # print(pr['number'])
                   # list_comments_by_copilot(org, repo, pr['number'])
                   if not list_comments_by_copilot(org, repo, pr['number']):
                       continue
                   num_copilot_comments += 1    
-                  body += f'--- PR #{pr['number']}: {pr['title']} ({pr['html_url']})\n\n'
-                  body += list_comments_by_copilot(org, repo, pr['number'])
+                  pr_body += f'--- PR #{pr['number']}: {pr['title']} ({pr['html_url']})\n\n'
+                  pr_body += list_comments_by_copilot(org, repo, pr['number'])
               if num_copilot_comments == 0:
-                 body += 'No Copilot review found\n'    
-              body += '--------------------------------------------------------------------------------------------------\n'
-              body += '--------------------------------------------------------------------------------------------------\n\n\n'
+                  continue
+              else:
+                  body += '--------------------------------------------------------------------------------------------------\n'
+                  body += '--------------------------------------------------------------------------------------------------\n\n\n'
+                  body += f'Repository: {repo}\n'
+                  body += pr_body   
+
   
           # print('Email body:')          
           print(body)
@@ -251,21 +256,21 @@ jobs:
           
           ###############################################
 
-          html_content = '''
-          <html>
-            <body>
-              <p>This is an <b>HTML</b> email with <i>formatted</i> text.</p>
-            </body>
-          </html>
-          '''
-          msg = MIMEText(html_content, 'html')
+          # html_content = '''
+          # <html>
+          #   <body>
+          #     <p>This is an <b>HTML</b> email with <i>formatted</i> text.</p>
+          #   </body>
+          # </html>
+          # '''
+          # msg = MIMEText(html_content, 'html')
 
-          msg['Subject'] = f'Html email for daily report'
-          msg['From'] = os.environ['GMAIL_USER']
-          msg['To'] = 'hlengoc.fpt@hillspire.com'  # or use dynamic address
+          # msg['Subject'] = f'Html email for daily report'
+          # msg['From'] = os.environ['GMAIL_USER']
+          # msg['To'] = 'hlengoc.fpt@hillspire.com'  # or use dynamic address
 
-          with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-              server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
-              server.sendmail(msg['From'], [msg['To']], msg.as_string())
+          # with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+          #     server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+          #     server.sendmail(msg['From'], [msg['To']], msg.as_string())
 
           "
