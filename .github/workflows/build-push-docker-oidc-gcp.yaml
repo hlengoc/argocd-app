@@ -16,16 +16,13 @@ permissions:
 jobs:
 
   Pre-check:
-    defaults:
-      run:
-        working-directory: ./src
     runs-on: ubuntu-latest
     steps:
-
       - name: "Run pre-check script"
         run: |
           echo ${GITHUB_REF}
           echo ${GITHUB_SHA}
+          
   Build_and_Push:
     defaults:
       run:
