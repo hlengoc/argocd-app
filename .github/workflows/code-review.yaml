@@ -31,6 +31,7 @@ jobs:
         run: |
           python -c "
           import os
+          from datetime import datetime, timezone
           import requests
           import smtplib
           from email.mime.text import MIMEText
@@ -52,8 +53,13 @@ jobs:
               return [repo['name'] for repo in repos]
 
           def get_pull_requests(org, repo):
-              r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls?state=open', headers=headers)
-              return r.json() if r.status_code == 200 else []
+              today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+              print(today)
+              r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls', headers=headers)
+              for pr in r.json():
+                if pr['created_at'].split('T')[0] == today:
+                  print(pr['number'])
+              # return r.json() if r.status_code == 200 else []
 
 
           def list_comments_by_copilot(org, repo, pr_number):
@@ -69,9 +75,11 @@ jobs:
           
           org = os.environ['ORG_NAME']
           repos = get_repos(org)
+          repos = ['app.ims']
           body = '************* Daily report for Copilot reviews in Hillspire repositories *************\n\n\n'
           for repo in repos:
               prs = get_pull_requests(org, repo)
+              print(prs)
               if not len(prs):
                   continue
               # body += f'Repository: {repo}\n'
@@ -95,18 +103,18 @@ jobs:
 
   
           # print('Email body:')          
-          print(body)
+          # print(body)
 
-          msg = MIMEText(body)
-          msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire repositories'
-          msg['From'] = os.environ['GMAIL_USER']
-          # msg['To'] = 'enterprise-app-dev@hillspire.com'
-          recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
-          msg['To'] = ', '.join(recipients)
+          # msg = MIMEText(body)
+          # msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire repositories'
+          # msg['From'] = os.environ['GMAIL_USER']
+          # # msg['To'] = 'enterprise-app-dev@hillspire.com'
+          # recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
+          # msg['To'] = ', '.join(recipients)
 
-          with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-              server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
-              server.sendmail(msg['From'], recipients, msg.as_string())
+          # with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+          #     server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+          #     server.sendmail(msg['From'], recipients, msg.as_string())
 
           
           #####################################################
