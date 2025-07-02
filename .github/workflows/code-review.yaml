@@ -54,8 +54,14 @@ jobs:
 
           def get_pull_requests(org, repo):
               today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+              params = {
+                    'state': 'all',
+                    'sort': 'created',
+                    'direction': 'desc',
+                    'per_page': 20
+                }
               print(today)
-              r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls', headers=headers)
+              r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls', headers=headers, params=params)
               for pr in r.json():
                 print(pr)
                 print(pr['created_at'].split('T')[0])
