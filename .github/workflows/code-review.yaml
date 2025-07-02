@@ -57,7 +57,9 @@ jobs:
               print(today)
               r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls', headers=headers)
               for pr in r.json():
+                print(pr)
                 print(pr['created_at'].split('T')[0])
+                print("--------------------------------------------------------------")
                 if pr['created_at'].split('T')[0] == today:
                   print(pr['number'])
               return r.json() if r.status_code == 200 else []
