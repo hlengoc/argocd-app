@@ -56,14 +56,20 @@ jobs:
               return [repo['name'] for repo in repos]
 
           def get_pull_requests(org, repo):
-              today = datetime.now(timezone.utc).strftime('%Y-%m-%d')
+              today = datetime.now(timezone.utc).date()
+              yesterday = today - timedelta(days=1)
+              
+              # Format dates for GitHub search
+              yesterday_str = yesterday.strftime('%Y-%m-%d')
+              today_str = today.strftime('%Y-%m-%d')
               params = {
                     'state': 'all',
                     'sort': 'created',
                     'direction': 'desc',
                     'per_page': 30
                 }
-              print(today)
+              print(today_str)
+              print(yesterday_str)
               r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls', headers=headers, params=params)
               for pr in r.json():
                 print(pr['state'])
@@ -71,7 +77,7 @@ jobs:
                 print('--------------------------------------------------------------')
               #   if pr['created_at'].split('T')[0] == today:
               #     print(pr['number'])
-              open_prs = [pr for pr in r.json() if (pr['created_at'].split('T')[0] == today) and (pr['state'] == 'open')]
+              open_prs = [pr for pr in r.json() if ((pr['created_at'].split('T')[0] == today_str) or (pr['created_at'].split('T')[0] == yesterday_str))  and (pr['state'] == 'open')]
               closed_prs = [pr for pr in r.json() if (pr['created_at'].split('T')[0] == today) and (pr['state'] == 'closed')]
               print(len(open_prs))
               print(len(closed_prs))
