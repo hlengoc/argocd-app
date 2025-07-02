@@ -68,13 +68,11 @@ jobs:
                     'direction': 'desc',
                     'per_page': 30
                 }
-              print(today_str)
-              print(yesterday_str)
               r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls', headers=headers, params=params)
               for pr in r.json():
-                print(pr['state'])
-                print(pr['created_at'].split('T')[0])
-                print('--------------------------------------------------------------')
+                # print(pr['state'])
+                # print(pr['created_at'].split('T')[0])
+                # print('--------------------------------------------------------------')
               #   if pr['created_at'].split('T')[0] == today:
               #     print(pr['number'])
               open_prs = [pr for pr in r.json() if ((pr['created_at'].split('T')[0] == today_str) or (pr['created_at'].split('T')[0] == yesterday_str))  and (pr['state'] == 'open')]
@@ -98,10 +96,10 @@ jobs:
           org = os.environ['ORG_NAME']
           repos = get_repos(org)
 
-          repos = ['app.ims']
+          # repos = ['app.ims']
           body = '************* Daily report for Copilot reviews in Hillspire repositories *************\n\n\n'
           for repo in repos:
-              body += f'List of open PR todays\n\n\n'
+              body += f'LIST OF OPEN PRs TODAY\n\n\n'
               open_prs = get_pull_requests(org, repo)[0]
               if not len(open_prs):
                   continue
@@ -123,9 +121,15 @@ jobs:
                   body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
                   body += '--------------------------------------------------------------------------------------------------\n\n\n' 
 
+          body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
+          body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
+          body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
+          body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
+          body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
+          body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
                   ##### For closed prs #####
           for repo in repos:
-              body += f'List of closed PR todays\n\n'
+              body += f'LIST OF CLOSED PRs TODAY\n\n\n'
               closed_prs = get_pull_requests(org, repo)[1]
               if not len(closed_prs):
                   continue
@@ -150,16 +154,17 @@ jobs:
           print('Email body:')          
           print(body)
 
-          # msg = MIMEText(body)
-          # msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire repositories'
-          # msg['From'] = os.environ['GMAIL_USER']
-          # # msg['To'] = 'enterprise-app-dev@hillspire.com'
+          msg = MIMEText(body)
+          msg['Subject'] = f'Daily Report for Copilot reviews in Hillspire repositories'
+          msg['From'] = os.environ['GMAIL_USER']
+          # msg['To'] = 'enterprise-app-dev@hillspire.com'
           # recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
-          # msg['To'] = ', '.join(recipients)
+          recipients = ['hlengoc.fpt@hillspire.com']
+          msg['To'] = ', '.join(recipients)
 
-          # with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-          #     server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
-          #     server.sendmail(msg['From'], recipients, msg.as_string())
+          with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+              server.login(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+              server.sendmail(msg['From'], recipients, msg.as_string())
 
           
           #####################################################
