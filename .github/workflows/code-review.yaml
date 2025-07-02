@@ -65,10 +65,10 @@ jobs:
                 }
               print(today)
               r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls', headers=headers, params=params)
-              # for pr in r.json():
-              #   print(pr['state'])
-              #   print(pr['created_at'].split('T')[0])
-              #   print('--------------------------------------------------------------')
+              for pr in r.json():
+                print(pr['state'])
+                print(pr['created_at'].split('T')[0])
+                print('--------------------------------------------------------------')
               #   if pr['created_at'].split('T')[0] == today:
               #     print(pr['number'])
               open_prs = [pr for pr in r.json() if (pr['created_at'].split('T')[0] == today) and (pr['state'] == 'open')]
