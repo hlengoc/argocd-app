@@ -96,7 +96,7 @@ jobs:
           for repo in repos:
               body += f'List of open PR todays\n\n'
               open_prs = get_pull_requests(org, repo)[0]
-              if not len(prs):
+              if not len(open_prs):
                   continue
               num_copilot_comments = 0
               pr_body = ''
