@@ -75,7 +75,7 @@ jobs:
               closed_prs = [pr for pr in r.json() if (pr['created_at'].split('T')[0] == today) and (pr['state'] == 'closed')]
               print(len(open_prs))
               print(len(closed_prs))
-              return (openprs, closed_prs) if r.status_code == 200 else []
+              return (open_prs, closed_prs) if r.status_code == 200 else []
 
 
           def list_comments_by_copilot(org, repo, pr_number):
