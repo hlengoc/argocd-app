@@ -58,16 +58,20 @@ jobs:
                     'state': 'all',
                     'sort': 'created',
                     'direction': 'desc',
-                    'per_page': 20
+                    'per_page': 30
                 }
               print(today)
               r = requests.get(f'https://api.github.com/repos/{org}/{repo}/pulls', headers=headers, params=params)
-              for pr in r.json():
-                print(pr)
-                print(pr['created_at'].split('T')[0])
-                print('--------------------------------------------------------------')
-                if pr['created_at'].split('T')[0] == today:
-                  print(pr['number'])
+              # for pr in r.json():
+              #   print(pr)
+              #   print(pr['created_at'].split('T')[0])
+              #   print('--------------------------------------------------------------')
+              #   if pr['created_at'].split('T')[0] == today:
+              #     print(pr['number'])
+              open_prs = [pr for pr in r.json() if pr['created_at'].split('T')[0] == today && pr['state'] == 'open']
+              closed_prs = [pr for pr in r.json() if pr['created_at'].split('T')[0] == today && pr['state'] == 'closed']
+              print(len(open_prs))
+              print(len(closed_prs))
               return r.json() if r.status_code == 200 else []
 
 
