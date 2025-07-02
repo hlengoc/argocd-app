@@ -68,8 +68,8 @@ jobs:
               #   print('--------------------------------------------------------------')
               #   if pr['created_at'].split('T')[0] == today:
               #     print(pr['number'])
-              open_prs = [pr for pr in r.json() if pr['created_at'].split('T')[0] == today && pr['state'] == 'open']
-              closed_prs = [pr for pr in r.json() if pr['created_at'].split('T')[0] == today && pr['state'] == 'closed']
+              open_prs = [pr for pr in r.json() if (pr['created_at'].split('T')[0] == today) && (pr['state'] == 'open')]
+              closed_prs = [pr for pr in r.json() if (pr['created_at'].split('T')[0] == today) && (pr['state'] == 'closed')]
               print(len(open_prs))
               print(len(closed_prs))
               return r.json() if r.status_code == 200 else []
