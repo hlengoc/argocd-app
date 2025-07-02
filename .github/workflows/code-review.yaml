@@ -97,10 +97,11 @@ jobs:
           
           org = os.environ['ORG_NAME']
           repos = get_repos(org)
-          repos = ['app.accountingdashboard']
+
+          repos = ['app.ims']
           body = '************* Daily report for Copilot reviews in Hillspire repositories *************\n\n\n'
           for repo in repos:
-              body += f'List of open PR todays\n\n'
+              body += f'List of open PR todays\n\n\n'
               open_prs = get_pull_requests(org, repo)[0]
               if not len(open_prs):
                   continue
@@ -122,6 +123,29 @@ jobs:
                   body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
                   body += '--------------------------------------------------------------------------------------------------\n\n\n' 
 
+                  ##### For closed prs #####
+          for repo in repos:
+              body += f'List of closed PR todays\n\n'
+              closed_prs = get_pull_requests(org, repo)[1]
+              if not len(closed_prs):
+                  continue
+              num_copilot_comments = 0
+              pr_body = ''
+              for pr in closed_prs:
+                  # print(pr['number'])
+                  # list_comments_by_copilot(org, repo, pr['number'])
+                  if not list_comments_by_copilot(org, repo, pr['number']):
+                      continue
+                  num_copilot_comments += 1    
+                  pr_body += f'--- PR #{pr['number']}: {pr['title']} ({pr['html_url']})\n\n'
+                  pr_body += list_comments_by_copilot(org, repo, pr['number'])
+              if num_copilot_comments == 0:
+                  continue
+              else:
+                  body += f'Repository: {repo}\n\n'
+                  body += pr_body  
+                  body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
+                  body += '--------------------------------------------------------------------------------------------------\n\n\n' 
   
           print('Email body:')          
           print(body)
