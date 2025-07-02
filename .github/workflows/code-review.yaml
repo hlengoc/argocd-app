@@ -59,7 +59,7 @@ jobs:
               for pr in r.json():
                 if pr['created_at'].split('T')[0] == today:
                   print(pr['number'])
-              # return r.json() if r.status_code == 200 else []
+              return r.json() if r.status_code == 200 else []
 
 
           def list_comments_by_copilot(org, repo, pr_number):
