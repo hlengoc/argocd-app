@@ -97,8 +97,8 @@ jobs:
           repos = get_repos(org)
 
           # repos = ['app.ims']
-          body = '************* Daily report for Copilot reviews in Hillspire repositories *************\n\n\n'
-          body += f'LIST OF OPEN PRs TODAY\n\n\n'
+          body = '******************************************** Daily report for Copilot reviews in Hillspire repositories ************************************************\n\n\n'
+          body += f'**************************************************************LIST OF OPEN PRs TODAY*****************************************************************************\n\n\n'
           for repo in repos:
               
               open_prs = get_pull_requests(org, repo)[0]
@@ -129,7 +129,7 @@ jobs:
           body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
           body += '------------------------------------------------------------------------------------------------------------------------------------------\n'
                   ##### For closed prs #####
-          body += f'LIST OF CLOSED PRs TODAY\n\n\n'
+          body += f'************************************************************LIST OF CLOSED PRs TODAY*******************************************************************************\n\n\n'
           for repo in repos:
               
               closed_prs = get_pull_requests(org, repo)[1]
