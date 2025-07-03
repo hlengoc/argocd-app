@@ -265,7 +265,7 @@ def send_email(html_body):
     msg['Subject'] = '📊 Daily Report for Copilot Reviews in Hillspire Repositories - {}'.format(today_str)
     msg['From'] = os.environ['GMAIL_USER']
 
-    recipients = ['hlengoc.fpt@hillspire.com', 'hlengoc.fpt@hillspire.com']
+    recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
     msg['To'] = ', '.join(recipients)
 
     # Create the complete HTML email
