@@ -139,8 +139,11 @@ def format_copilot_comment_html(comment_text):
     html_text = html_text.replace('\n\n', '</p><p>')
     html_text = html_text.replace('\n', '<br>')
 
-    html_text = html_text.replace('\<details\>', '')
-    html_text = html_text.replace('\<\/details\>', '')
+    html_text = html_text.replace(r'&lt;details&gt;', '')
+    html_text = html_text.replace(r'&lt;/details&gt;', '')
+    html_text = html_text.replace(r'&lt;summary&gt;', '')
+    html_text = html_text.replace(r'&lt;/summary&gt;', '')
+    print(html_text)
     
     return f'<div style="line-height: 1.5;"><p>{html_text}</p></div>'
 
