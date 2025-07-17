@@ -33,14 +33,35 @@ def write_entry(logger_name):
     # Struct log. The struct can be any JSON-serializable dictionary.
     logger.log_struct(
         {
-            "name": "King Arthur",
-            "quest": "Find the Holy Grail",
-            "favorite_color": {
-                "name": "King Arthur",
-                "quest": "Find the Holy Grail",
-                "favorite_color": "Blue",
-            }
-        },
+  "header": {
+    "event_id": "evt-456789123",
+    "timestamp": "2025-06-23T15:45:12Z",
+    "user": {
+      "user_id": "user-12345",
+      "email": "john.doe@hillspire.com",
+      "roles": ["Viewer"],
+      "ip_address": "192.168.1.101",
+      "session_id": "sess-abc123"
+    },
+    "metadata": {
+      "source_system": "ims-web-app",
+      "app_version": "v2.3.1",
+      "env": "production"
+    }
+  },
+  "payload": {
+    "ims_access": {
+      "type": "api_call",
+      "endpoint": "/api/investments/holding-summary",
+      "method": "GET",
+      "query_params": {
+        "investmentId": "inv-009876"
+      },
+      "status_code": 200,
+      "response_time_ms": 120,
+      "referrer": "/dashboard"
+    }
+  }},
         severity="INFO",
     )
 

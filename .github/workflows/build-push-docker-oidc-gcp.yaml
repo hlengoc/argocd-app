@@ -1,13 +1,13 @@
 name: Build push Docker images to Google Artifact Registry
 
 on:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 env:
   PROJECT_ID: fpt-dev # TODO: update to your Google Cloud project ID
-  VERSION: ga-0.0.6
+  VERSION: ga-0.0.7
 
 permissions:
   id-token: write
@@ -17,7 +17,7 @@ jobs:
   Build_and_Push:
     defaults:
       run:
-        working-directory: ./src
+        working-directory: ./frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
