@@ -16,12 +16,12 @@ permissions:
 jobs:
 
   call-workflow-in-local-repo:
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/test.yaml
     with:
       config-path: .github/labeler.yml
     secrets:
       token: ${{ secrets.GITHUB_TOKEN }}
-      
+
   # Build_and_Push:
   #   defaults:
   #     run:
