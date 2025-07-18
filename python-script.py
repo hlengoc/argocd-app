@@ -143,7 +143,7 @@ def format_copilot_comment_html(comment_text):
     html_text = html_text.replace(r'&lt;/details&gt;', '')
     html_text = html_text.replace(r'&lt;summary&gt;', '')
     html_text = html_text.replace(r'&lt;/summary&gt;', '')
-    
+    print(html_text)
     return f'<div style="line-height: 1.5;"><p>{html_text}</p></div>'
 
 # Usage in your existing script
