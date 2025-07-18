@@ -62,7 +62,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: image
-          path: image.tar
+          path: ./image.tar
     outputs:
       image: asia-southeast1-docker.pkg.dev/fpt-dev/web-frontend-repo/frontend-react-app:${{ env.VERSION }}
 
