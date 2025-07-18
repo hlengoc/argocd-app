@@ -55,22 +55,20 @@ jobs:
             .
             
           docker push "${DOCKER_TAG}"
-          docker save -o image.tar "${DOCKER_TAG}"
-          ls -ls
 
-      - name: upload image artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: image
-          path: frontend/image.tar
-    outputs:
-      image: asia-southeast1-docker.pkg.dev/fpt-dev/web-frontend-repo/frontend-react-app:${{ env.VERSION }}
+      # - name: upload image artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: image
+      #     path: frontend/image.tar
+  #   outputs:
+  #     image: asia-southeast1-docker.pkg.dev/fpt-dev/web-frontend-repo/frontend-react-app:${{ env.VERSION }}
 
-  trivy_scan:
-    uses: ./.github/workflows/trivy-scan.yaml
-    needs: build_and_push
-    with:
-      image: ${{ needs.build_and_push.outputs.image }}
+  # trivy_scan:
+  #   uses: ./.github/workflows/trivy-scan.yaml
+  #   needs: build_and_push
+  #   with:
+  #     image: ${{ needs.build_and_push.outputs.image }}
       
   update_infra_repo:
     runs-on: ubuntu-latest
