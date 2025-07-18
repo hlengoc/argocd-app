@@ -3,7 +3,7 @@ name: Reusable test workflow
 on:
   workflow_call:
     inputs:
-      image_artifact:
+      image:
         required: true
         type: string
 
@@ -24,7 +24,7 @@ jobs:
           ls -ls
           docker load --input image.tar
           docker images
-          
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
