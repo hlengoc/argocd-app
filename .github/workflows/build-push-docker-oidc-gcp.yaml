@@ -70,7 +70,7 @@ jobs:
     uses: ./.github/workflows/trivy-scan.yaml
     needs: build_and_push
     with:
-      image_artifact: image.tar
+      image: ${{ needs.build_and_push.outputs.image }}
       
   update_infra_repo:
     runs-on: ubuntu-latest
