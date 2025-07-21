@@ -139,7 +139,7 @@ def format_copilot_comment_html(comment_text):
     
     # Convert line breaks
     html_text = html_text.replace('\n\n', '</p><p>')
-    # html_text = html_text.replace('\n', '<br>')
+    html_text = html_text.replace('\n', '')
 
     html_text = html_text.replace(r'&lt;details&gt;', '')
     html_text = html_text.replace(r'&lt;/details&gt;', '')
