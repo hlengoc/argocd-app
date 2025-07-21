@@ -159,11 +159,11 @@ def format_copilot_comment_html(comment_text):
     if indices:
         print(f"The character '{char_to_find}' is found at indices: {indices}")
     
-    for i in range(len(indices)):
-        if i % 2 == 0:
-            html_text = html_text[:indices[i]] + '<td>' + html_text[indices[i]+1:]
-        else:
-            html_text = html_text[:indices[i]] + '</td>' + html_text[indices[i]+1:]
+    while i < len(indices):
+        html_text[i] = '<tr><td>'
+        html_text[i+1] = '</td><td>'
+        html_text[i+2] = '</td></tr>'
+        i += 3
 
     print("-----------------------------------------------------------------------------------------------------***************")
     print(html_text)
