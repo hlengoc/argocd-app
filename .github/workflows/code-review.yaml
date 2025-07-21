@@ -6,9 +6,9 @@ on:
   schedule:
     - cron: "00 10 * * *" # every day at 10:00 AM UTC - 17:00 AM Vietnam time
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 jobs:
   fetch-prs:
@@ -33,5 +33,5 @@ jobs:
           GMAIL_PASS: ${{ secrets.GMAIL_APP_PASSWORD }}
         run: |
           ls
-          python python-script.py
+          python python-send-table-email.py
           
