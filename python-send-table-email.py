@@ -118,6 +118,8 @@ def format_copilot_comment_html(comment_text):
 
     # Escape HTML
     html_text = html.escape(comment_text)
+    print("-----------------------------------------------------------------------------------------------------***************")
+    print(html_text)
     
     # Basic formatting
     html_text = re.sub(r'^## (.+)$', r'<h2 style="color: #0366d6; margin: 16px 0 12px 0; font-size: 18px;">\1</h2>', html_text, flags=re.MULTILINE)
@@ -143,7 +145,9 @@ def format_copilot_comment_html(comment_text):
     html_text = html_text.replace(r'&lt;/details&gt;', '')
     html_text = html_text.replace(r'&lt;summary&gt;', '')
     html_text = html_text.replace(r'&lt;/summary&gt;', '')
+     print("-----------------------------------------------------------------------------------------------------***************")
     print(html_text)
+     print("-----------------------------------------------------------------------------------------------------***************")
     return f'<div style="line-height: 1.5;"><p>{html_text}</p></div>'
 
 # Usage in your existing script
