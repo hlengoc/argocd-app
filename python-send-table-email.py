@@ -145,6 +145,9 @@ def format_copilot_comment_html(comment_text):
     html_text = html_text.replace(r'&lt;/details&gt;', '')
     html_text = html_text.replace(r'&lt;summary&gt;', '')
     html_text = html_text.replace(r'&lt;/summary&gt;', '')
+    
+    html_text = html_text.replace(r'| ---- | ----------- |', '')
+
     print("-----------------------------------------------------------------------------------------------------***************")
     print(html_text)
     print("-----------------------------------------------------------------------------------------------------***************")
