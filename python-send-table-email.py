@@ -46,7 +46,7 @@ def get_pull_requests(org, repo):
     """Get pull requests created today and yesterday from a repository."""
     headers = get_github_headers()
     today = datetime.now(timezone.utc).date()
-    yesterday = today - timedelta(days=3)
+    yesterday = today - timedelta(days=1)
     
     # Format dates for comparison
     yesterday_str = yesterday.strftime('%Y-%m-%d')
@@ -293,8 +293,8 @@ def send_email(html_body):
     msg['Subject'] = '📊 Daily Report for Copilot Reviews in Hillspire Repositories - {}'.format(today_str)
     msg['From'] = os.environ['GMAIL_USER']
 
-    # recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
-    recipients = ['hlengoc.fpt@hillspire.com']
+    recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
+    # recipients = ['hlengoc.fpt@hillspire.com']
     msg['To'] = ', '.join(recipients)
 
     # Create the complete HTML email
