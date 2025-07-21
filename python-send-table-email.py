@@ -158,7 +158,7 @@ def format_copilot_comment_html(comment_text):
             indices.append(i)
     if indices:
         print(f"The character '{char_to_find}' is found at indices: {indices}")
-    
+    i = 0
     while i < len(indices):
         html_text[indices[i]] = '<tr><td>'
         html_text[indices[i]+1] = '</td><td>'
