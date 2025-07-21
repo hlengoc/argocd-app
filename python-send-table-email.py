@@ -139,7 +139,7 @@ def format_copilot_comment_html(comment_text):
     
     # Convert line breaks
     html_text = html_text.replace('\n\n', '</p><p>')
-    html_text = html_text.replace('\n', '<br>')
+    # html_text = html_text.replace('\n', '<br>')
 
     html_text = html_text.replace(r'&lt;details&gt;', '')
     html_text = html_text.replace(r'&lt;/details&gt;', '')
@@ -147,6 +147,7 @@ def format_copilot_comment_html(comment_text):
     html_text = html_text.replace(r'&lt;/summary&gt;', '')
     
     html_text = html_text.replace(r'| ---- | ----------- |', '')
+    html_text = html_text.replace(r'| File | Description |', '<table border="1" cellpadding="4" cellspacing="0"><tr><th> File </th><th> Descriptor </th></tr>')
 
     print("-----------------------------------------------------------------------------------------------------***************")
     print(html_text)
