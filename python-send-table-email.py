@@ -46,7 +46,7 @@ def get_pull_requests(org, repo):
     """Get pull requests created today and yesterday from a repository."""
     headers = get_github_headers()
     today = datetime.now(timezone.utc).date()
-    yesterday = today - timedelta(days=1)
+    yesterday = today - timedelta(days=3)
     
     # Format dates for comparison
     yesterday_str = yesterday.strftime('%Y-%m-%d')
