@@ -149,6 +149,22 @@ def format_copilot_comment_html(comment_text):
     html_text = html_text.replace(r'| ---- | ----------- |', '')
     html_text = html_text.replace(r'| File | Description |', '<table border="1" cellpadding="4" cellspacing="0"><tr><th> File </th><th> Descriptor </th></tr>')
 
+
+    char_to_find = "|"
+    indices = []
+
+    for i in range(len(html_text)):
+        if html_text[i] == char_to_find:
+            indices.append(i)
+    if indices:
+        print(f"The character '{char_to_find}' is found at indices: {indices}")
+    
+    for i in range(len(indices)):
+        if i % 2 == 0:
+            html_text = html_text[:indices[i]] + '<td>' + html_text[indices[i]+1:]
+        else:
+            html_text = html_text[:indices[i]] + '</td>' + html_text[indices[i]+1:]
+
     print("-----------------------------------------------------------------------------------------------------***************")
     print(html_text)
     print("-----------------------------------------------------------------------------------------------------***************")
