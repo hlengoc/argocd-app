@@ -165,8 +165,8 @@ def format_copilot_comment_html(comment_text):
         print(html_text[indices[i + 1]])
         print(html_text[indices[i + 2]])
         html_text[indices[i]] = '<tr><td>'
-        html_text[indices[i]+1] = '</td><td>'
-        html_text[indices[i]+2] = '</td></tr>'
+        html_text[indices[i + 1]] = '</td><td>'
+        html_text[indices[i + 2]] = '</td></tr>'
         i += 3
     html_text = "".join(html_text)
     print("-----------------------------------------------------------------------------------------------------***************")
