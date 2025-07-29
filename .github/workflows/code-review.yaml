@@ -29,7 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_ORG }}
           ORG_NAME: Hillspire
-          GMAIL_USER: hlengoc.fpt@hillspire.com
+          GMAIL_USER: integrations@hillspire.com
           GMAIL_PASS: ${{ secrets.GMAIL_APP_PASSWORD }}
         run: |
           ls
