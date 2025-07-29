@@ -85,7 +85,7 @@ jobs:
         run: |
           if [ $(cat manifests/web-app/deployment.yaml | grep image: |  cut -d':' -f3) != ${VERSION} ]; then
             echo "not same version, push"
-            sed -i "s/^ *image:.*/        image: asia-southeast1-docker.pkg.dev\/fpt-dev\/web-frontend-repo\/frontend-react-app:${VERSION}/" manifests/deployment.yaml
+            sed -i "s/^ *image:.*/        image: asia-southeast1-docker.pkg.dev\/fpt-dev\/web-frontend-repo\/frontend-react-app:${VERSION}/" manifests/web-app/deployment.yaml
             cat manifests/web-app/deployment.yaml
             git config --global user.email "hlengoc.fpt@hillspire.com"
             git config --global user.name "hlengoc"

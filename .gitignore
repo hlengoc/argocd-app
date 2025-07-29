@@ -3,3 +3,4 @@ test.sh
 ./python-script-bk.py
 log-app/fpt-dev-9cbc661d1068.json
 *.DS_Store
+frontend/node_modules
