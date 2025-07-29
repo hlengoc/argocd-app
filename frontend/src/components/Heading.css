@@ -1,0 +1,42 @@
+#title {
+    color: black;
+}
+
+.container-fluid {
+    padding: 3% 15%;
+}
+
+/* Navigation Bar */ 
+.navbar {
+    padding-bottom: 4rem;
+}
+
+.navbar-brand {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 2em;
+    /* font-weight: bold; */
+}
+
+.nav-item {
+    padding: 0 18px;
+    font-size: 1.2rem;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.5rem;
+}
+
+/* Download Button */
+.download-button {
+    margin: 30px 10px 10px 0;
+}
+
+/* Title image */
+.title-image {
+    width: 60%;
+    margin-left: 100px;
+    height: 400px;
+
+}

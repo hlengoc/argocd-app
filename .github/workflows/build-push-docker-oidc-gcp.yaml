@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 env:
   PROJECT_ID: fpt-dev # TODO: update to your Google Cloud project ID
-  VERSION: ga-0.0.7
+  VERSION: ga-0.0.8
 
 permissions:
   id-token: write
@@ -83,10 +83,10 @@ jobs:
 
       - name: Commit and Push
         run: |
-          if [ $(cat manifests/deployment.yaml | grep image: |  cut -d':' -f3) != ${VERSION} ]; then
+          if [ $(cat manifests/web-app/deployment.yaml | grep image: |  cut -d':' -f3) != ${VERSION} ]; then
             echo "not same version, push"
             sed -i "s/^ *image:.*/        image: asia-southeast1-docker.pkg.dev\/fpt-dev\/web-frontend-repo\/frontend-react-app:${VERSION}/" manifests/deployment.yaml
-            cat manifests/deployment.yaml
+            cat manifests/web-app/deployment.yaml
             git config --global user.email "hlengoc.fpt@hillspire.com"
             git config --global user.name "hlengoc"
             git add .

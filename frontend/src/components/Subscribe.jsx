@@ -1,5 +1,10 @@
 import {useState} from "react";
 import axios from "axios";
+import {
+  AuthFlowType,
+  CognitoIdentityProviderClient,
+  InitiateAuthCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 
 function Subscribe({onSignIn}) {
   const [email, setEmail] = useState("");
@@ -19,11 +24,39 @@ function Subscribe({onSignIn}) {
   function handleQuestionChange(event) {
     setQuestion(event.target.value);
   }
-  
+  const initiateAuth = async ({username, password, clientId}) => {
+    const client = new CognitoIdentityProviderClient({
+      region: "ap-southeast-1",
+    });
+    try {
+      const command = new InitiateAuthCommand({
+        AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
+        AuthParameters: {
+          USERNAME: username,
+          PASSWORD: password,
+        },
+        ClientId: clientId,
+      });
+      const result = await client.send(command);
+      // console.log(result.AuthenticationResult.IdToken);
+      setToken(result.AuthenticationResult.IdToken);
+      setError("");
+      alert("Login successfully! Now let look at your pets at the bottom ^^");
+      onSignIn();
+    } catch (e) {
+      console.error(e);
+      setError(e.message);
+    }
+  };
   function handleLogin(event) {
     event.preventDefault();
-    console.log(email);
-    console.log(password);
+    initiateAuth({
+      username: email,
+      password: password,
+      clientId: "oljc1qeesbbjobfc03v71h2ov",
+    });
+    // Calling cognito identity provider library to get token
+    // console.log("token is: " + token);
     //contact Lambda-backend API
     // axios({
     //   method: "post",
@@ -63,10 +96,13 @@ function Subscribe({onSignIn}) {
     // })
     axios({
       method: "post",
-      url: "http://backend-service:8000/api/subscribe",
+      headers: {
+        Authorization: token,
+      },
+      url: "https://7jtrlo7xv8.execute-api.ap-southeast-1.amazonaws.com/dev/api/rds",
       data: {
-        question: "my new question",
-        email: "lehai2909@gmail.com",
+        question: question,
+        email: email,
       },
     })
       .then((res) => console.log(res.data))

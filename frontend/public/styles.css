@@ -1,0 +1,45 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    /* background-color: rgb(38, 144, 186); */
+    background-color: #BBE9FF;
+}
+
+
+
+
+h2 {
+    margin-top: 25px ;
+    margin-left: 25px ;
+}
+
+p {
+    color:black;
+    font-size: 1rem;
+    margin-left: 25px;
+
+}
+
+
+
+.item {
+    background-color: white;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 25px;
+}
+
+.circle-img {
+    border-radius: 50%;
+    border: 7px solid #fff;
+    width: 120px;
+    height: 120px;
+  }
+
+.item-img {
+    width: 200px;
+    height: 200px;
+}
+
+.item-img-div {
+    padding: 15px 15px;
+}

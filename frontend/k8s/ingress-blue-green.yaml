@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress-blue-green
+  # namespace: "hello-kubernetes"
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/actions.blue-green: |
+      {
+        "type":"forward",
+        "forwardConfig":{
+          "targetGroups":[
+            {
+              "serviceName":"app-service",
+              "servicePort":"3000",
+              "weight":50
+            },
+            {
+              "serviceName":"app-service-v3",
+              "servicePort":"3000",
+              "weight":50
+            }
+          ]
+        }
+      }
+  labels:
+    app: frontend
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: blue-green
+                port:
+                  name: use-annotation

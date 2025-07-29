@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: 520812544446.dkr.ecr.ap-southeast-1.amazonaws.com/lehai-react-app:v1.0.4
+        imagePullPolicy: Always
+        name: frontend
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "0.2"
+            memory: "0.5G"
+          limits:
+            cpu: "0.5"
+            memory: "2G"
