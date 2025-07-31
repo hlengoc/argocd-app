@@ -1,37 +1,39 @@
 import {useState} from "react";
-import Heading from "./components/Heading.jsx";
-import Items from "./components/Items.jsx";
-import Subscribe from "./components/Subscribe.jsx";
-import SignIn from "./components/SignIn.jsx";
 import "./index.css";
-import Features from "./components/Features.jsx";
+import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
+import { LoginCallback, Security } from '@okta/okta-react';
+import Home from './Home';
+import Profile from "./Profile";
+import { BrowserRouter, Routes, Route } from "react-router";
+import HomePage from "./components/HomePage";
+
+
+const oktaAuth = new OktaAuth({
+  issuer: "https://dev-39748740.okta.com/oauth2/default",
+  clientId: "0oaon19v96y6UoIp05d7",
+  redirectUri: window.location.origin + "/login/callback",
+  scopes: ["openid", "profile", "email", "offline_access"],
+});
 
 function App() {
-  //state to assure only authenticated user can see content
-  const [visible, setVisible] = useState(false);
+  const restoreOriginalUri = (_oktaAuth, originalUri) => {
+    window.location.replace(originalUri || '/');
+  };
 
   return (
     <>
-      <SignIn
-        visible={visible}
-        onSignIn={() => {
-          setVisible(true);
-        }}
-        onSignOut={() => {
-          setVisible(false);
-        }}
-      />
-
-      <Heading />
-      <Features />
-      <Subscribe
-        onSignIn={() => {
-          setVisible(true);
-        }}
-      />
-      <Items visible={visible} />
+      <BrowserRouter>
+        <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}>
+          <Routes>
+            <Route path="/" exact element={<HomePage />} />
+            <Route path="/login/callback" element={<LoginCallback />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </Security>
+      </BrowserRouter>
     </>
   );
 }
 
 export default App;
+

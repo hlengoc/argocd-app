@@ -1,6 +1,13 @@
 import "./Heading.css";
+import {useOktaAuth} from "@okta/okta-react";
 
 function Heading() {
+  const {authState, oktaAuth} = useOktaAuth();
+  const signin = async () => {
+    await oktaAuth.signInWithRedirect();
+    console.log(authState.idToken.claims);
+  };
+  const signout = async () => await oktaAuth.signOut();
   function handleClick(props) {
     alert(
       "Please Sign-up first. Click the user icon in the right up corner to sign-up. If you already signed-up, use Test button below to login and see cute pets ^^"
@@ -10,7 +17,7 @@ function Heading() {
     <div id="title" className="container-fluid">
       <nav className="navbar navbar-expand-lg navbar-light">
         <a className="navbar-brand" href="https://lehai2909.github.io">
-          Welcome to Hai's website <i className="bi bi-emoji-smile"></i>
+          <i className="bi bi-emoji-smile"></i>
         </a>
         <button
           className="navbar-toggler"
@@ -23,7 +30,10 @@ function Heading() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <div
+          className="collapse navbar-collapse col-md-6"
+          id="navbarSupportedContent"
+        >
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <a className="nav-link" href="https://lehai2909.github.io">
@@ -41,6 +51,15 @@ function Heading() {
               </a>
             </li>
           </ul>
+        </div>
+        <div className="col-md-3 text-end">
+          {!authState?.isAuthenticated && (
+            <button onClick={signin}>Sign In with Okta</button>
+          )}
+
+          {authState?.isAuthenticated && (
+            <button onClick={signout}>Sign Out</button>
+          )}
         </div>
       </nav>
 
