@@ -4,11 +4,11 @@ name: Daily report for Copilot reviews
 
 on:
   schedule:
-    - cron: "00 10 * * *" # every day at 10:00 AM UTC - 17:00 AM Vietnam time
+    - cron: "00 10 * * 1-5" # every day at 10:00 AM UTC - 17:00 AM Vietnam time
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   fetch-prs:
