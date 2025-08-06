@@ -118,7 +118,7 @@ def format_copilot_comment_html(comment_text):
 
     # Escape HTML
     html_text = html.escape(comment_text)
-    print("-----------------------------------------------------------------------------------------------------***************")
+    print("------------------------------------------------------START---------------------------------------------***************")
     print(html_text)
     
     # Basic formatting
@@ -161,9 +161,9 @@ def format_copilot_comment_html(comment_text):
     html_text = list(html_text)
     i = 0
     while i < len(indices):
-        print(html_text[indices[i]])
-        print(html_text[indices[i + 1]])
-        print(html_text[indices[i + 2]])
+        # print(html_text[indices[i]])
+        # print(html_text[indices[i + 1]])
+        # print(html_text[indices[i + 2]])
         html_text[indices[i]] = '<tr><td>'
         html_text[indices[i + 1]] = '</td><td>'
         html_text[indices[i + 2]] = '</td></tr>'
@@ -171,7 +171,7 @@ def format_copilot_comment_html(comment_text):
     html_text = "".join(html_text)
     print("-----------------------------------------------------------------------------------------------------***************")
     print(html_text)
-    print("-----------------------------------------------------------------------------------------------------***************")
+    print("---------------------------------------------------------END----------------------------------------***************")
     return f'<div style="line-height: 1.5;"><p>{html_text}</p></div>'
 
 # Usage in your existing script
@@ -293,8 +293,8 @@ def send_email(html_body):
     msg['Subject'] = '📊 Daily Report for Copilot Reviews in Hillspire Repositories - {}'.format(today_str)
     msg['From'] = os.environ['GMAIL_USER']
 
-    recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
-    # recipients = ['hlengoc.fpt@hillspire.com']
+    # recipients = ['hlengoc.fpt@hillspire.com', 'enterprise-app-dev@hillspire.com']
+    recipients = ['hlengoc.fpt@hillspire.com']
     msg['To'] = ', '.join(recipients)
 
     # Create the complete HTML email
