@@ -156,10 +156,14 @@ def format_copilot_comment_html(comment_text):
     for i in range(len(html_text)):
         if html_text[i] == char_to_find:
             indices.append(i)
-    if indices:
-        print(f"The character '{char_to_find}' is found at indices: {indices}")
-    html_text = list(html_text)
-    i = 0
+    if indices and html_text.string("Show a summary per file") != -1:
+        indices = [x for x in indices if x > html_text.index("Show a summary per file")]
+        html_text = list(html_text)
+        i = 0
+    else:
+        indices = []
+    print(f"The character '{char_to_find}' is found at indices: {indices}")
+    
     while i < len(indices):
         # print(html_text[indices[i]])
         # print(html_text[indices[i + 1]])
